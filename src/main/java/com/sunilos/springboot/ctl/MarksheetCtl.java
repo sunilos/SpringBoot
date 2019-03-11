@@ -27,13 +27,13 @@ import com.sunilos.springboot.service.MarksheetServiceInt;
 /**
  * Marksheet rest controllers. It contains following REST points
  * 
- * http://localhost:8080/ : displays health of bean an says fit and fine
- * http://localhost:8080/get/1 : returns marksheet of ID 1
- * http://localhost:8080/search : returns list of marksheets
- * http://localhost:8080/rollno/A1 : returns Marksheet of given A1 roll number
- * http://localhost:8080/meritlist : returns merit list of students
- * http://localhost:8080/delete/1 : deletes marksheet of given id
- * http://localhost:8080/save : adds or updates a markhseet
+ * http://localhost:8080/Marksheet : displays health of bean an says fit and fine
+ * http://localhost:8080/Marksheet/get/1 : returns marksheet of ID 1
+ * http://localhost:8080/Marksheet/search : returns list of marksheets
+ * http://localhost:8080/Marksheet/rollno/A1 : returns Marksheet of given A1 roll number
+ * http://localhost:8080/Marksheet/meritlist : returns merit list of students
+ * http://localhost:8080/Marksheet/delete/1 : deletes marksheet of given id
+ * http://localhost:8080/Marksheet/save : adds or updates a markhseet
  * 
  * @author Sunil Sahu
  * @Copyright (c) SunilOS Infotech Pvt Ltd
