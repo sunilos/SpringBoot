@@ -1,6 +1,6 @@
 # SOSSpringBoot
 
-This porject contains example of Sprig Boot, REST controllers, JPA and MySQL communication examples 
+This project contains example of Sprig Boot, REST controllers, JPA and MySQL communication examples 
 
 REST controller has followinga REST APIs 
 
