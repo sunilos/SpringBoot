@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sunilos.springboot.bean.Marksheet;
@@ -76,8 +77,9 @@ public class MarksheetCtl {
 	 * 
 	 * @return
 	 */
-	@GetMapping("search")
-	public List<Marksheet> search() {
+    @RequestMapping (value="search" , method={RequestMethod.GET, RequestMethod.POST})
+	public List<Marksheet> search(@RequestBody Marksheet m) {
+    	System.out.println("-----------------------" + m.getName());
 		List<Marksheet> list = service.search();
 		return list;
 	}
