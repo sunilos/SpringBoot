@@ -65,6 +65,16 @@ public interface MarksheetServiceInt {
 	public List<Marksheet> search();
 
 	/**
+	 * Returns list with pagination
+	 * 
+	 * @param dto
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	public List<Marksheet> search(Marksheet dto, int pageNo, int pageSize);
+
+	/**
 	 * Finds marksheet by Roll No
 	 * 
 	 * @param rollNo

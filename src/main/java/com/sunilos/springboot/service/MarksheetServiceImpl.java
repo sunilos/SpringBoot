@@ -3,13 +3,17 @@ package com.sunilos.springboot.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sunilos.springboot.bean.Marksheet;
+import com.sunilos.springboot.dao.Criteria;
 import com.sunilos.springboot.dao.MarksheetRespositoryInt;
 
 /**
@@ -69,6 +73,24 @@ public class MarksheetServiceImpl implements MarksheetServiceInt {
 	@Override
 	public List<Marksheet> search() {
 		return dao.findAll();
+	}
+
+	@Override
+	public List<Marksheet> search(Marksheet dto, int pageNo, int pageSize) {
+
+		PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+
+		Example<Marksheet> example = Example.of(dto);
+
+		Page<Marksheet> page = null;
+
+		if (example != null) {
+			page = dao.findAll(example, pageRequest);
+		} else {
+			page = dao.findAll(pageRequest);
+		}
+
+		return page.getContent();
 	}
 
 	@Override

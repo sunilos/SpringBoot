@@ -28,13 +28,13 @@ import com.sunilos.springboot.service.MarksheetServiceInt;
 /**
  * Marksheet rest controllers. It contains following REST points
  * 
- * http://localhost:8080/Marksheet : displays health of bean an says fit and fine
- * http://localhost:8080/Marksheet/get/1 : returns marksheet of ID 1
+ * http://localhost:8080/Marksheet : displays health of bean an says fit and
+ * fine http://localhost:8080/Marksheet/get/1 : returns marksheet of ID 1
  * http://localhost:8080/Marksheet/search : returns list of marksheets
- * http://localhost:8080/Marksheet/rollno/A1 : returns Marksheet of given A1 roll number
- * http://localhost:8080/Marksheet/meritlist : returns merit list of students
- * http://localhost:8080/Marksheet/delete/1 : deletes marksheet of given id
- * http://localhost:8080/Marksheet/save : adds or updates a markhseet
+ * http://localhost:8080/Marksheet/rollno/A1 : returns Marksheet of given A1
+ * roll number http://localhost:8080/Marksheet/meritlist : returns merit list of
+ * students http://localhost:8080/Marksheet/delete/1 : deletes marksheet of
+ * given id http://localhost:8080/Marksheet/save : adds or updates a markhseet
  * 
  * @author Sunil Sahu
  * @Copyright (c) SunilOS Infotech Pvt Ltd
@@ -77,10 +77,17 @@ public class MarksheetCtl {
 	 * 
 	 * @return
 	 */
-    @RequestMapping (value="search" , method={RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value = "search", method = { RequestMethod.GET, RequestMethod.POST })
 	public List<Marksheet> search(@RequestBody Marksheet m) {
-    	System.out.println("-----------------------" + m.getName());
+		System.out.println("-----------------------" + m.getName());
 		List<Marksheet> list = service.search();
+		return list;
+	}
+
+	@RequestMapping(value = "search/{page}", method = { RequestMethod.GET, RequestMethod.POST })
+	public List<Marksheet> search(@RequestBody Marksheet m, @PathVariable int page) {
+		System.out.println("-----------------------" + m.getName());
+		List<Marksheet> list = service.search(m, page, 10);
 		return list;
 	}
 

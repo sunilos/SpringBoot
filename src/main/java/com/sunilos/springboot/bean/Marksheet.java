@@ -28,7 +28,7 @@ public class Marksheet implements Serializable {
 	@GenericGenerator(name = "hiIncrement", strategy = "increment")
 	@GeneratedValue(generator = "hiIncrement")
 	@Column(name = "ID", unique = true, nullable = false)
-	protected long id;
+	protected Long id;
 
 	@Column(name = "ROLL_NO", length = 20)
 	protected String rollNo = null;
@@ -71,11 +71,11 @@ public class Marksheet implements Serializable {
 	@Column(name = "MODIFIED_DATETIME")
 	protected Timestamp modifiedDatetime;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

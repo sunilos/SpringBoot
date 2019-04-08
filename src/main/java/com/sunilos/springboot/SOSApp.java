@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- * Starts spring boot application
+ * Starts spring boot ORS application
  * 
  * @author Sunil Sahu
  * @Copyright (c) SunilOS Infotech Pvt Ltd
@@ -27,7 +27,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @ComponentScan(basePackages = { "com.sunilos.springboot" })
 
-@EnableScheduling
+/**
+ * Annotation @EnableScheduling is used to enable schedulers in your
+ * application.
+ */
+// @EnableScheduling
 
 public class SOSApp {
 
@@ -39,7 +43,8 @@ public class SOSApp {
 	}
 
 	/**
-	 * Enables CORS to all urls 
+	 * Enables CORS to all urls
+	 * 
 	 * @return
 	 */
 	@Bean
@@ -47,7 +52,7 @@ public class SOSApp {
 		return new WebMvcConfigurerAdapter() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				//registry.addMapping("/**").allowedOrigins("http://localhost:8080");
+				// registry.addMapping("/**").allowedOrigins("http://localhost:8080");
 				registry.addMapping("/**");
 			}
 		};

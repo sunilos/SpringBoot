@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.sunilos.springboot.bean.Document;
+import com.sunilos.springboot.bean.DocumentSummary;
 import com.sunilos.springboot.bean.Marksheet;
 
 /**
@@ -21,22 +23,14 @@ import com.sunilos.springboot.bean.Marksheet;
  */
 
 @Repository
-public interface MarksheetRespositoryInt extends JpaRepository<Marksheet, Long>, JpaSpecificationExecutor {
+public interface DocumentSummaryRespositoryInt extends JpaRepository<DocumentSummary, Long>, JpaSpecificationExecutor {
 
 	/**
-	 * Finds marksheet by roll number
+	 * Finds document by name
 	 * 
 	 * @param rollNo
 	 * @return
 	 */
-	public Marksheet findByRollNo(String rollNo);
-
-	/**
-	 * Gets merit list of students
-	 * 
-	 * @return
-	 */
-	@Query("from Marksheet order by (physics + chemistry + maths) desc")
-	public List<Marksheet> getMeritList();
+	public List<DocumentSummary> findByName(String name);
 
 }
