@@ -12,7 +12,7 @@ import com.sunilos.springboot.bean.Marksheet;
 
 /**
  * 
- * Marksheet Data Access Object (DAO) interface.
+ * Repository provides CRUD for document information and binary data
  * 
  * JpaSpecificationExecutor is used to for dynamic custom queries
  * 

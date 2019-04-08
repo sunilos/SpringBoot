@@ -94,6 +94,11 @@ public class DocumentCtl {
 		return list;
 	}
 
+	/**
+	 * Returns list of Documents with pagination
+	 * 
+	 * @return
+	 */
 	@PostMapping("search/{page}")
 	public List<DocumentSummary> search(@RequestBody DocumentSummary doc, @PathVariable int page) {
 		System.out.println("-----------------------" + doc.getName());
@@ -157,7 +162,7 @@ public class DocumentCtl {
 	}
 
 	/**
-	 * Upload a document. If ID is exist in database then document is updated
+	 * Uploads a document. If ID is exist in database then document is updated
 	 * else added to database.
 	 * 
 	 * @param id
@@ -204,7 +209,7 @@ public class DocumentCtl {
 	}
 
 	/**
-	 * Download a document
+	 * Download a document for given id
 	 * 
 	 * @param id
 	 * @param response
