@@ -63,7 +63,7 @@ public interface DocumentServiceInt {
 	 * @param pageSize
 	 * @return
 	 */
-	public List<DocumentSummary> search();
+	public List<DocumentSummary> search(DocumentSummary dto);
 
 	/**
 	 * Returns list with pagination

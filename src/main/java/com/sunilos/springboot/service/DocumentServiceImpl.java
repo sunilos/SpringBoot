@@ -77,8 +77,9 @@ public class DocumentServiceImpl implements DocumentServiceInt {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<DocumentSummary> search() {
-		return summaryDao.findAll();
+	public List<DocumentSummary> search(DocumentSummary dto) {
+		Example<DocumentSummary> example = Example.of(dto);
+		return summaryDao.findAll(example);
 	}
 
 	@Override

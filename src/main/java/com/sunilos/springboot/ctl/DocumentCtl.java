@@ -77,9 +77,9 @@ public class DocumentCtl {
 	 */
 	@GetMapping("get/{id}")
 	public Document get(@PathVariable Long id) {
-		Document m = service.findById(id);
-		System.out.println("Object:------------" + m);
-		return m;
+		Document doc = service.findById(id);
+		System.out.println("Object:------------" + doc);
+		return doc;
 	}
 
 	/**
@@ -88,9 +88,17 @@ public class DocumentCtl {
 	 * @return
 	 */
 	@PostMapping("search")
-	public List<DocumentSummary> search(@RequestBody Document doc) {
+	public List<DocumentSummary> search(@RequestBody DocumentSummary doc) {
 		System.out.println("-----------------------" + doc.getName());
-		List<DocumentSummary> list = service.search();
+		
+		if(doc.getName() !=null && doc.getName().trim().length() ==0){
+			doc.setName(null);
+		}
+		if(doc.getDescription() !=null && doc.getDescription().trim().length() ==0){
+			doc.setDescription(null);
+		}
+		
+		List<DocumentSummary> list = service.search(doc);
 		return list;
 	}
 
