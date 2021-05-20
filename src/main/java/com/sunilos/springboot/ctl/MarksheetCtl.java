@@ -22,9 +22,6 @@ import com.sunilos.springboot.bean.Marksheet;
 import com.sunilos.springboot.form.MarksheetForm;
 import com.sunilos.springboot.service.MarksheetServiceInt;
 
-@RestController
-@RequestMapping(value = "Marksheet")
-
 /**
  * Marksheet rest controllers. It contains following REST points
  * 
@@ -40,6 +37,9 @@ import com.sunilos.springboot.service.MarksheetServiceInt;
  * @Copyright (c) SunilOS Infotech Pvt Ltd
  *
  */
+
+@RestController
+@RequestMapping(value = "Marksheet")
 public class MarksheetCtl {
 
 	/*
