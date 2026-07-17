@@ -3,17 +3,17 @@ package com.sunilos.springboot.ctl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Configure and register Interceptors
- * 
+ *
  * @author Sunil Sahu
  * @Copyright (c) SunilOS Infotech Pvt Ltd
  *
  */
 @Configuration
-public class InterceptorConfig extends WebMvcConfigurerAdapter {
+public class InterceptorConfig implements WebMvcConfigurer {
 
 	@Autowired
 	private FrontCtl frontCtl;

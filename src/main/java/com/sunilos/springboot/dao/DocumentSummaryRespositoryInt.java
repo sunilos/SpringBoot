@@ -23,7 +23,7 @@ import com.sunilos.springboot.bean.Marksheet;
  */
 
 @Repository
-public interface DocumentSummaryRespositoryInt extends JpaRepository<DocumentSummary, Long>, JpaSpecificationExecutor {
+public interface DocumentSummaryRespositoryInt extends JpaRepository<DocumentSummary, Long>, JpaSpecificationExecutor<DocumentSummary> {
 
 	/**
 	 * Finds document by name

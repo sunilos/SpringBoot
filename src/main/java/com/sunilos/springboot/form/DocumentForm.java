@@ -1,11 +1,6 @@
 package com.sunilos.springboot.form;
 
-import javax.persistence.Column;
-import javax.persistence.Lob;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Contains Marksheet form elements and their declarative input validations.

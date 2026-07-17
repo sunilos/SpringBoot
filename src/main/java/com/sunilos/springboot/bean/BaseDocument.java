@@ -2,17 +2,14 @@ package com.sunilos.springboot.bean;
 
 import java.io.Serializable;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.MappedSuperclass;
 
 /**
  * Document bean. It is persistent object. It contains information of document.
@@ -25,8 +22,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class BaseDocument implements Serializable {
 
 	@Id
-	@GenericGenerator(name = "hiIncrement", strategy = "increment")
-	@GeneratedValue(generator = "hiIncrement")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	protected Long id;
 

@@ -3,18 +3,21 @@ package com.sunilos.springboot.bean;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 /**
  * Marksheet bean. It is persistent object.
+ * 
+ * 
+ * 
+ * 
  * 
  * @author Sunil Sahu
  * @Copyright (c) SunilOS Infotech Pvt Ltd
@@ -25,8 +28,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 public class Marksheet implements Serializable {
 
 	@Id
-	@GenericGenerator(name = "hiIncrement", strategy = "increment")
-	@GeneratedValue(generator = "hiIncrement")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	protected Long id;
 

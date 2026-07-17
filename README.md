@@ -1,17 +1,136 @@
 # SOSSpringBoot
 
-This project contains example of Sprig Boot, REST controllers, JPA and MySQL communication examples 
+SOSSpringBoot is a sample Spring Boot 3 application that demonstrates REST APIs, Spring Data JPA, MySQL integration, validation, actuator endpoints, and JWT-based authentication.
 
-REST controller has followinga REST APIs 
+## Technology stack
 
-1. http://localhost:8080/Marksheet : displays health of bean an says fit and fine
-1. http://localhost:8080/Marksheet/get/1 : returns marksheet of ID 1
-1. http://localhost:8080/Marksheet/search : returns list of marksheets
-1. http://localhost:8080/Marksheet/rollno/A1 : returns Marksheet of given A1 roll number
-1. http://localhost:8080/Marksheet/meritlist : returns merit list of students
-1. http://localhost:8080/Marksheet/delete/1 : deletes marksheet of given id
-1. http://localhost:8080/Marksheet/save : adds or updates a markhseet
+- Java: 21
+- Maven: 3.6+
+- Spring Boot: 3.3.5
+- Spring Framework: 6.x (managed by Spring Boot)
+- MySQL: configured through MySQL Connector/J (`com.mysql:mysql-connector-j`)
+- JPA/Hibernate: Spring Data JPA with Hibernate
+- Validation: Spring Boot Starter Validation
+- JWT: JJWT 0.12.6
+- Actuator: Spring Boot Actuator
+- Packaging: executable JAR
 
-See https://github.com/sunilos/SOSSpringBoot/wiki
+## Prerequisites
+
+Before running the application, make sure you have:
+
+- JDK 21 installed
+- MySQL server running
+- Maven installed
+
+## Database setup
+
+1. Create a MySQL database (for example, `demo_ors`).
+2. Update the database connection details in `src/main/resources/application.properties`.
+3. Optionally run the SQL script in `src/main/resources/db.sql` to create the initial table structure.
+
+Example configuration:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/demo_ors?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
+spring.datasource.username=root
+spring.datasource.password=
+```
+
+## Run the application
+
+```bash
+mvn clean install
+java -jar target/SOSSpringBoot-0.0.1-SNAPSHOT.jar
+```
+
+The application runs on port `8080` by default.
+
+## API endpoints
+
+Base URL: `http://localhost:8080`
+
+### Marksheet APIs
+
+- `GET /marksheet` - Get all marksheets
+- `GET /marksheet/{id}` - Get marksheet by ID
+- `GET /marksheet/rollno/{rollNo}` - Get marksheet by roll number
+- `GET /marksheet/meritlist` - Get merit list
+- `POST /marksheet` - Create a new marksheet
+- `POST /marksheet/search` - Search marksheets with optional pagination
+- `PUT /marksheet/{id}` - Update marksheet fully
+- `PATCH /marksheet/{id}` - Update marksheet partially
+- `DELETE /marksheet/{id}` - Delete marksheet
+
+Example request:
+
+```bash
+curl http://localhost:8080/marksheet
+```
+
+### User APIs
+
+- `GET /user` - Get all users
+- `GET /user/{id}` - Get user by ID
+- `GET /user/login/{loginId}` - Get user by login ID
+- `GET /user/email/{email}` - Get user by email
+- `POST /user` - Create a new user
+- `POST /user/login` - Authenticate and receive a JWT token
+- `POST /user/search` - Search users with optional pagination
+- `POST /user/changePassword/{id}` - Change password
+- `PUT /user/{id}` - Update user fully
+- `PATCH /user/{id}` - Update user partially
+- `DELETE /user/{id}` - Delete user
+
+Example request:
+
+```bash
+curl http://localhost:8080/user
+```
+
+## JWT authentication
+
+The application uses JWT (JSON Web Token) for protecting API access.
+
+### How it works
+
+1. Call `POST /user/login` with a valid `loginId` and `password`.
+2. The server returns a token in the response body.
+3. For all protected APIs, send the token in the `Authorization` header:
+
+```http
+Authorization: Bearer <token>
+```
+
+### Login example
+
+```bash
+curl -X POST http://localhost:8080/user/login \
+  -H "Content-Type: application/json" \
+  -d '{"loginId":"admin","password":"password"}'
+```
+
+### Token configuration
+
+JWT settings are defined in `src/main/resources/application.properties`:
+
+```properties
+jwt.secret=SunilOSSecretKey2024#SpringBoot!!
+jwt.expiration=86400000
+```
+
+> The `jwt.secret` value should be changed before using this project in production.
+
+## Technical notes
+
+- A custom interceptor validates the JWT on every protected request.
+- Public endpoints include `/user/login` and `/actuator/**`.
+- All controllers return a JSON response envelope with `error`, `message`, and `data` fields.
+- Validation errors are returned with detailed messages.
+- The application uses Spring MVC for REST controllers and Spring Data JPA for database access.
+
+## Reference
+
+For more information, refer to the project source code in the `src` folder and the Spring Boot documentation.
 
 

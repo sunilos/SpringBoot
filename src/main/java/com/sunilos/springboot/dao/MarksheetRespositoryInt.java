@@ -21,7 +21,7 @@ import com.sunilos.springboot.bean.Marksheet;
  */
 
 @Repository
-public interface MarksheetRespositoryInt extends JpaRepository<Marksheet, Long>, JpaSpecificationExecutor {
+public interface MarksheetRespositoryInt extends JpaRepository<Marksheet, Long>, JpaSpecificationExecutor<Marksheet> {
 
 	/**
 	 * Finds marksheet by roll number
