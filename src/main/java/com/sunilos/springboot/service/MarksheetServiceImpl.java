@@ -1,20 +1,18 @@
 package com.sunilos.springboot.service;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
-import org.springframework.data.domain.Example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sunilos.springboot.bean.Marksheet;
-import com.sunilos.springboot.dao.Criteria;
-import com.sunilos.springboot.dao.MarksheetRespositoryInt;
+import com.sunilos.springboot.common.ApplicationException;
+import com.sunilos.springboot.dao.MarksheetDAOInt;
 
 /**
  * Marksheet service class contains business logics.
@@ -31,18 +29,16 @@ public class MarksheetServiceImpl implements MarksheetServiceInt {
 	private static Logger log = LoggerFactory.getLogger(MarksheetServiceImpl.class);
 
 	@Autowired
-	private MarksheetRespositoryInt dao;
+	private MarksheetDAOInt dao;
 
 	@Override
 	public long add(Marksheet dto) {
-		Marksheet m = dao.save(dto);
-		return m.getId();
+		return dao.add(dto);
 	}
 
 	@Override
 	public void update(Marksheet dto) {
-		dao.save(dto);
-
+		dao.update(dto);
 	}
 
 	@Override
@@ -61,14 +57,18 @@ public class MarksheetServiceImpl implements MarksheetServiceInt {
 	@Override
 	public Marksheet delete(long id) {
 		Marksheet m = findById(id);
-		dao.deleteById(id);
+		dao.delete(id);
 		return m;
 	}
 
 	@Override
 	public Marksheet findById(long id) {
-		Optional<Marksheet> optional = dao.findById(id);
-		return optional.get();
+		Marksheet m = dao.findById(id);
+		if (m == null) {
+			log.error("Marksheet not found");
+			throw new ApplicationException("Marksheet not found");
+		}
+		return m;
 	}
 
 	@Override
@@ -79,19 +79,27 @@ public class MarksheetServiceImpl implements MarksheetServiceInt {
 	@Override
 	public List<Marksheet> search(Marksheet dto, int pageNo, int pageSize) {
 
-		PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
-
-		Example<Marksheet> example = Example.of(dto);
-
-		Page<Marksheet> page = null;
-
-		if (example != null) {
-			page = dao.findAll(example, pageRequest);
-		} else {
-			page = dao.findAll(pageRequest);
+		Map<String, Object> params = new HashMap<>();
+		if (dto.getRollNo() != null) {
+			params.put("rollNo", dto.getRollNo());
+		}
+		if (dto.getName() != null) {
+			params.put("name", dto.getName());
+		}
+		if (dto.getPhysics() != null) {
+			params.put("physics", dto.getPhysics());
+		}
+		if (dto.getChemistry() != null) {
+			params.put("chemistry", dto.getChemistry());
+		}
+		if (dto.getMaths() != null) {
+			params.put("maths", dto.getMaths());
+		}
+		if (dto.getStudentId() != null) {
+			params.put("studentId", dto.getStudentId());
 		}
 
-		return page.getContent();
+		return dao.findAll(params, pageNo, pageSize);
 	}
 
 	@Override
@@ -100,8 +108,18 @@ public class MarksheetServiceImpl implements MarksheetServiceInt {
 	}
 
 	@Override
+	public boolean exists(long id) {
+		return dao.exists(id);
+	}
+
+	@Override
 	public List<Marksheet> getMeritList() {
 		return dao.getMeritList();
+	}
+
+	@Override
+	public Marksheet updateFields(Long id, Map<String, Object> fields) {
+		return dao.updateFields(id, fields);
 	}
 
 }

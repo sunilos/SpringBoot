@@ -1,17 +1,10 @@
 package com.sunilos.springboot.bean;
 
-import java.io.Serializable;
 import java.sql.Date;
-import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 /**
  * User bean. It is a persistent object.
@@ -21,12 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
  */
 @Entity
 @Table(name = "ST_USER")
-public class User implements Serializable {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
-	protected Long id;
+public class User extends BaseDTO {
 
 	@Column(name = "LOGIN", length = 50, unique = true)
 	protected String loginId;
@@ -57,28 +45,6 @@ public class User implements Serializable {
 
 	@Column(name = "STATUS")
 	protected Integer status;
-
-	@Column(name = "CREATED_BY", length = 50)
-	protected String createdBy;
-
-	@Column(name = "MODIFIED_BY", length = 50)
-	protected String modifiedBy;
-
-	@CreatedDate
-	@Column(name = "CREATED_DATETIME")
-	protected Timestamp createdDatetime;
-
-	@LastModifiedDate
-	@Column(name = "MODIFIED_DATETIME")
-	protected Timestamp modifiedDatetime;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getLoginId() {
 		return loginId;
@@ -158,37 +124,5 @@ public class User implements Serializable {
 
 	public void setStatus(Integer status) {
 		this.status = status;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Timestamp getCreatedDatetime() {
-		return createdDatetime;
-	}
-
-	public void setCreatedDatetime(Timestamp createdDatetime) {
-		this.createdDatetime = createdDatetime;
-	}
-
-	public Timestamp getModifiedDatetime() {
-		return modifiedDatetime;
-	}
-
-	public void setModifiedDatetime(Timestamp modifiedDatetime) {
-		this.modifiedDatetime = modifiedDatetime;
 	}
 }

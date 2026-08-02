@@ -28,24 +28,24 @@ import com.sunilos.springboot.service.RoleServiceInt;
 /**
  * Role REST controller.
  *
- * GET    /Role                 → list all roles
- * GET    /Role/{id}            → get by id
- * GET    /Role/name/{name}     → get by name
- * POST   /Role                 → create  (201)
- * POST   /Role/search          → filtered search with optional pagination
- * PUT    /Role/{id}            → full update
- * PATCH  /Role/{id}            → partial update (only supplied fields)
- * DELETE /Role/{id}            → delete
+ * GET /Role → list all roles
+ * GET /Role/{id} → get by id
+ * GET /Role/name/{name} → get by name
+ * POST /Role → create (201)
+ * POST /Role/search → filtered search with optional pagination
+ * PUT /Role/{id} → full update
+ * PATCH /Role/{id} → partial update (only supplied fields)
+ * DELETE /Role/{id} → delete
  *
  * Response envelope:
- *   success: { "error": false, "message": "...", "data": ... }
- *   error:   { "error": true,  "message": "...", "errors": ... }
+ * success: { "error": false, "message": "...", "data": ... }
+ * error: { "error": true, "message": "...", "errors": ... }
  *
  * @author Sunil Sahu
  * @Copyright (c) SunilOS Infotech Pvt Ltd
  */
 @RestController
-@RequestMapping("Role")
+@RequestMapping("role")
 public class RoleCtl {
 
 	@Autowired
@@ -134,9 +134,9 @@ public class RoleCtl {
 	 *
 	 * Body (all fields optional):
 	 * {
-	 *   "name":     "Admin",
-	 *   "pageNo":   1,
-	 *   "pageSize": 10
+	 * "name": "Admin",
+	 * "pageNo": 1,
+	 * "pageSize": 10
 	 * }
 	 * When pageNo is omitted or 0, all matching records are returned.
 	 */
@@ -146,14 +146,16 @@ public class RoleCtl {
 			body = new HashMap<>();
 		}
 
-		int pageNo   = body.containsKey("pageNo")   ? Integer.parseInt(body.get("pageNo").toString())   : 0;
-		int pageSize = body.containsKey("pageSize")  ? Integer.parseInt(body.get("pageSize").toString()) : 10;
+		int pageNo = body.containsKey("pageNo") ? Integer.parseInt(body.get("pageNo").toString()) : 0;
+		int pageSize = body.containsKey("pageSize") ? Integer.parseInt(body.get("pageSize").toString()) : 10;
 
 		List<Role> list;
 		if (pageNo > 0) {
 			Role criteria = new Role();
-			if (body.containsKey("name"))        criteria.setName((String) body.get("name"));
-			if (body.containsKey("description")) criteria.setDescription((String) body.get("description"));
+			if (body.containsKey("name"))
+				criteria.setName((String) body.get("name"));
+			if (body.containsKey("description"))
+				criteria.setDescription((String) body.get("description"));
 			list = service.search(criteria, pageNo, pageSize);
 		} else {
 			list = service.search();
@@ -211,8 +213,10 @@ public class RoleCtl {
 			return errorResponse(null, "Role not found", HttpStatus.NOT_FOUND);
 		}
 
-		if (fields.containsKey("name"))        existing.setName((String) fields.get("name"));
-		if (fields.containsKey("description")) existing.setDescription((String) fields.get("description"));
+		if (fields.containsKey("name"))
+			existing.setName((String) fields.get("name"));
+		if (fields.containsKey("description"))
+			existing.setDescription((String) fields.get("description"));
 
 		service.update(existing);
 		return successResponse(existing, "Role partially updated", HttpStatus.OK);

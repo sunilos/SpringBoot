@@ -15,11 +15,12 @@ import jakarta.validation.constraints.NotNull;
  */
 public class MarksheetForm {
 
-	protected long id = 0;
+	protected Long id = 0L;
 
 	@NotEmpty
 	private String rollNo = null;
 
+	@NotEmpty
 	private String name = null;
 
 	@NotNull
@@ -40,11 +41,11 @@ public class MarksheetForm {
 	@NotNull
 	protected Long studentId;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -1,16 +1,24 @@
 package com.sunilos.springboot.ctl;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Set;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +28,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.DataBinder;
 
 import com.sunilos.springboot.bean.Marksheet;
 import com.sunilos.springboot.form.MarksheetForm;
@@ -51,6 +60,9 @@ public class MarksheetCtl {
 
 	@Autowired
 	private MarksheetServiceInt service;
+
+	@Autowired
+	private Validator validator;
 
 	// ------------------------------------------------------------------ helpers
 
@@ -90,11 +102,12 @@ public class MarksheetCtl {
 	 */
 	@GetMapping("{id}")
 	public ResponseEntity<Map<String, Object>> get(@PathVariable Long id) {
-		Marksheet m = service.findById(id);
-		if (m == null) {
-			return errorResponse(null, "Marksheet not found", HttpStatus.NOT_FOUND);
+		try {
+			Marksheet m = service.findById(id);
+			return successResponse(m);
+		} catch (Exception e) {
+			return errorResponse(null, e.getMessage(), HttpStatus.NOT_FOUND);
 		}
-		return successResponse(m);
 	}
 
 	/**
@@ -218,35 +231,48 @@ public class MarksheetCtl {
 		return successResponse(existing, "Marksheet updated successfully", HttpStatus.OK);
 	}
 
-	// ------------------------------------------------------------------ PATCH
-
 	/**
-	 * PATCH /Marksheet/{id} → partial update (only supplied fields are changed)
+	 * PATCH /Marksheet/{id} → partial update (only supplied fields)
+	 * 
+	 * @param id
+	 * @param fields
+	 * @return
 	 */
+
 	@PatchMapping("{id}")
 	public ResponseEntity<Map<String, Object>> patch(@PathVariable Long id,
 			@RequestBody Map<String, Object> fields) {
 
-		Marksheet existing = service.findById(id);
-		if (existing == null) {
+		if (!service.exists(id)) {
 			return errorResponse(null, "Marksheet not found", HttpStatus.NOT_FOUND);
 		}
 
-		if (fields.containsKey("rollNo"))
-			existing.setRollNo((String) fields.get("rollNo"));
-		if (fields.containsKey("name"))
-			existing.setName((String) fields.get("name"));
-		if (fields.containsKey("physics"))
-			existing.setPhysics((Integer) fields.get("physics"));
-		if (fields.containsKey("chemistry"))
-			existing.setChemistry((Integer) fields.get("chemistry"));
-		if (fields.containsKey("maths"))
-			existing.setMaths((Integer) fields.get("maths"));
-		if (fields.containsKey("studentId"))
-			existing.setStudentId(Long.parseLong(fields.get("studentId").toString()));
+		// Validate the supplied fields using a MarksheetForm and the same validator
+		// used for POST/PUT
+		MarksheetForm form = new MarksheetForm();
+		BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(form);
+		for (Map.Entry<String, Object> entry : fields.entrySet()) {
+			if (wrapper.isWritableProperty(entry.getKey())) {
+				wrapper.setPropertyValue(entry.getKey(), entry.getValue());
+			}
+		}
 
-		service.update(existing);
-		return successResponse(existing, "Marksheet partially updated", HttpStatus.OK);
+		DataBinder binder = new DataBinder(form, "form");
+		binder.setValidator(validator);
+		binder.validate();
+		BindingResult bindingResult = binder.getBindingResult();
+
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errors = fieldErrors(bindingResult);
+			errors.keySet().retainAll(fields.keySet()); // only supplied fields can fail
+			if (!errors.isEmpty()) {
+				return errorResponse(errors, "Validation failed", HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		service.updateFields(id, fields);
+
+		return successResponse(fields, "Marksheet partially updated", HttpStatus.OK);
 	}
 
 	// ----------------------------------------------------------------- DELETE
@@ -264,8 +290,12 @@ public class MarksheetCtl {
 		return successResponse(null, "Marksheet deleted successfully", HttpStatus.OK);
 	}
 
-	// ----------------------------------------------------------------- private
-
+	/**
+	 * Extracts field-level validation errors from the binding result.
+	 * 
+	 * @param br
+	 * @return
+	 */
 	private Map<String, String> fieldErrors(BindingResult br) {
 		Map<String, String> errors = new HashMap<>();
 		for (FieldError e : br.getFieldErrors()) {

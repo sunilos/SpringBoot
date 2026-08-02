@@ -1,0 +1,1 @@
+start java -jar F:\workspace\java\SpringBoot\target\SOSSpringBoot-0.0.1-SNAPSHOT.jar
