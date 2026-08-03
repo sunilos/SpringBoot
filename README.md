@@ -88,6 +88,40 @@ Example request:
 curl http://localhost:8080/user
 ```
 
+### Role APIs
+
+- `GET /role` - Get all roles
+- `GET /role/{id}` - Get role by ID
+- `GET /role/name/{name}` - Get role by name
+- `POST /role` - Create a new role
+- `POST /role/search` - Search roles with optional pagination
+- `PUT /role/{id}` - Update role fully
+- `PATCH /role/{id}` - Update role partially
+- `DELETE /role/{id}` - Delete role
+
+Example request:
+
+```bash
+curl http://localhost:8080/role
+```
+
+### Document APIs
+
+- `GET /Document` - Health check
+- `GET /Document/get/{id}` - Get document by ID
+- `POST /Document/search` - Search documents
+- `POST /Document/search/{page}` - Search documents with pagination
+- `POST /Document/save` - Create or update document metadata
+- `POST /Document/upload` - Upload a document (multipart form, field name `file`)
+- `GET /Document/download/{id}` - Download document content by ID
+- `GET /Document/delete/{id}` - Delete document by ID
+
+Example request:
+
+```bash
+curl http://localhost:8080/Document
+```
+
 ## JWT authentication
 
 The application uses JWT (JSON Web Token) for protecting API access.
@@ -123,14 +157,13 @@ jwt.expiration=86400000
 
 ## Technical notes
 
-- A custom interceptor validates the JWT on every protected request.
-- Public endpoints include `/user/login` and `/actuator/**`.
-- All controllers return a JSON response envelope with `error`, `message`, and `data` fields.
-- Validation errors are returned with detailed messages.
-- The application uses Spring MVC for REST controllers and Spring Data JPA for database access.
+- A custom interceptor (`FrontCtl`) validates the JWT on every protected request.
+- Public endpoints include `/user/login` and `/actuator/**`; CORS preflight (`OPTIONS`) requests are also allowed through.
+- Marksheet, Role, and User controllers return a JSON response envelope with `error`, `message`, and `data` fields.
+- Validation errors are returned with detailed field-level messages.
+- Marksheet, Role, and User data access is implemented through a custom EntityManager-based DAO layer (`BaseDAOInt`/`BaseDAOImpl`), not Spring Data repositories. Document data access still uses a Spring Data JPA repository directly.
 
 ## Reference
 
 For more information, refer to the project source code in the `src` folder and the Spring Boot documentation.
-
 
