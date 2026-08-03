@@ -1,14 +1,8 @@
 package com.sunilos.springboot.ctl;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
@@ -17,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +20,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.validation.DataBinder;
 
 import com.sunilos.springboot.bean.Marksheet;
 import com.sunilos.springboot.form.MarksheetForm;
@@ -56,7 +47,7 @@ import com.sunilos.springboot.service.MarksheetServiceInt;
  */
 @RestController
 @RequestMapping("marksheet")
-public class MarksheetCtl {
+public class MarksheetCtl extends BaseCtl<Marksheet> {
 
 	@Autowired
 	private MarksheetServiceInt service;
@@ -64,50 +55,9 @@ public class MarksheetCtl {
 	@Autowired
 	private Validator validator;
 
-	// ------------------------------------------------------------------ helpers
-
-	private ResponseEntity<Map<String, Object>> successResponse(Object data, String message, HttpStatus status) {
-		Map<String, Object> res = new HashMap<>();
-		res.put("error", false);
-		res.put("message", message);
-		res.put("data", data);
-		return ResponseEntity.status(status).body(res);
-	}
-
-	private ResponseEntity<Map<String, Object>> successResponse(Object data) {
-		return successResponse(data, "", HttpStatus.OK);
-	}
-
-	private ResponseEntity<Map<String, Object>> errorResponse(Object errors, String message, HttpStatus status) {
-		Map<String, Object> res = new HashMap<>();
-		res.put("error", true);
-		res.put("message", message);
-		res.put("errors", errors);
-		return ResponseEntity.status(status).body(res);
-	}
-
-	// -------------------------------------------------------------------- GET
-
-	/**
-	 * GET /Marksheet → returns all marksheets
-	 */
-	@GetMapping
-	public ResponseEntity<Map<String, Object>> get() {
-		List<Marksheet> list = service.search();
-		return successResponse(list);
-	}
-
-	/**
-	 * GET /Marksheet/{id} → returns single marksheet by id
-	 */
-	@GetMapping("{id}")
-	public ResponseEntity<Map<String, Object>> get(@PathVariable Long id) {
-		try {
-			Marksheet m = service.findById(id);
-			return successResponse(m);
-		} catch (Exception e) {
-			return errorResponse(null, e.getMessage(), HttpStatus.NOT_FOUND);
-		}
+	@Override
+	public MarksheetServiceInt getService() {
+		return service;
 	}
 
 	/**
@@ -115,7 +65,7 @@ public class MarksheetCtl {
 	 */
 	@GetMapping("rollno/{rollNo}")
 	public ResponseEntity<Map<String, Object>> getByRollNo(@PathVariable String rollNo) {
-		Marksheet m = service.findByRollNo(rollNo);
+		Marksheet m = getService().findByRollNo(rollNo);
 		if (m == null) {
 			return errorResponse(null, "Marksheet not found for roll no: " + rollNo, HttpStatus.NOT_FOUND);
 		}
@@ -127,7 +77,7 @@ public class MarksheetCtl {
 	 */
 	@GetMapping("meritlist")
 	public ResponseEntity<Map<String, Object>> getMeritList() {
-		List<Marksheet> list = service.getMeritList();
+		List<Marksheet> list = getService().getMeritList();
 		return successResponse(list);
 	}
 
@@ -233,12 +183,11 @@ public class MarksheetCtl {
 
 	/**
 	 * PATCH /Marksheet/{id} → partial update (only supplied fields)
-	 * 
-	 * @param id
-	 * @param fields
-	 * @return
+	 *
+	 * @param id     marksheet id
+	 * @param fields fields to update
+	 * @return updated fields
 	 */
-
 	@PatchMapping("{id}")
 	public ResponseEntity<Map<String, Object>> patch(@PathVariable Long id,
 			@RequestBody Map<String, Object> fields) {
@@ -273,34 +222,5 @@ public class MarksheetCtl {
 		service.updateFields(id, fields);
 
 		return successResponse(fields, "Marksheet partially updated", HttpStatus.OK);
-	}
-
-	// ----------------------------------------------------------------- DELETE
-
-	/**
-	 * DELETE /Marksheet/{id} → delete marksheet
-	 */
-	@DeleteMapping("{id}")
-	public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
-		Marksheet existing = service.findById(id);
-		if (existing == null) {
-			return errorResponse(null, "Marksheet not found", HttpStatus.NOT_FOUND);
-		}
-		service.delete(id);
-		return successResponse(null, "Marksheet deleted successfully", HttpStatus.OK);
-	}
-
-	/**
-	 * Extracts field-level validation errors from the binding result.
-	 * 
-	 * @param br
-	 * @return
-	 */
-	private Map<String, String> fieldErrors(BindingResult br) {
-		Map<String, String> errors = new HashMap<>();
-		for (FieldError e : br.getFieldErrors()) {
-			errors.put(e.getField(), e.getDefaultMessage());
-		}
-		return errors;
 	}
 }
